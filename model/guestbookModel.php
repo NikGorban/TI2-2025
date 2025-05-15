@@ -21,61 +21,50 @@
  * Les données sont échappées pour éviter les injections XSS (protection backend)
  */
 
- 
-function addGuestbook(PDO $db,
+ function addGuestbook(PDO $db,
                     string $firstname,
                     string $lastname,
                     string $usermail,
                     string $phone,
                     string $postcode,
                     string $message
-): bool|string
-
+): bool
 {
-    $erreur = "";
-    
-    $firstnameVerify = strip_tags($firstname);
-    if(empty($firstnameVerify)){
-        $erreur.="Votre nom est incorrect.<br>";
-    }elseif(strlen($firstnameVerify)>100){
-        $erreur.="Votre nom est trop long.<br>";
-    }
-
-    $lastnameVerify = strip_tags($lastname); 
-    $firstnameVerify = htmlspecialchars($firstnameVerify,ENT_QUOTES);
-    $lastnameVerify = trim($lastnameVerify); 
-    if(empty($lastnameVerify)){
-        $erreur.="Votre nom est incorrect.<br>";
-    }elseif(strlen($lastnameVerify)>100){
-        $erreur.="Votre nom est trop long.<br>";
-    }
-
-    $usermail = filter_var($usermail,FILTER_VALIDATE_EMAIL);
-    if($usermail===false){
-        $erreur .= "Email incorrect.<br>";
-    }
-
- 
+   
+    // protection supplémentaire
+    $firstname = trim(htmlspecialchars(strip_tags($firstname),ENT_QUOTES));
+    $lastname = trim(htmlspecialchars(strip_tags($lastname),ENT_QUOTES));
+    $usermail = filter_var($usermail, FILTER_VALIDATE_EMAIL);
+    $phone = trim(htmlspecialchars(strip_tags($phone),ENT_QUOTES));
+    $postcode = trim(htmlspecialchars(strip_tags($postcode),ENT_QUOTES));
     $message = trim(htmlspecialchars(strip_tags($message),ENT_QUOTES));
-    if(empty($message)||strlen($message)>500){
-        $erreur .= "Message incorrect<br>";
+ 
+    if(
+        empty($firstname) || strlen($firstname) > 100 ||
+        empty($lastname) || strlen($lastname) > 100 ||
+        $usermail === false || strlen($usermail) > 200 ||
+        empty($phone) || strlen($phone) > 20 || ctype_digit($phone) === false   ||
+        empty($postcode) || strlen($postcode) > 4 || ctype_digit($postcode) === false ||
+        empty($message) || strlen($message) > 500
+ 
+    ){
+        return false;
     }
-
-
-    if(!empty($erreur)) return false;
-
-
+ 
+    // pas d'erreur détectée
     $prepare = $db->prepare("
-INSERT INTO `guestbook`(`firstname`, `lastname`, `usermail`, `phone`, `postcode`, `message`) VALUES (?,?,?,?,?,?)
+   INSERT INTO `guestbook` (`firstname`,`lastname`,`usermail`,`phone`,`postcode`,`message`)
+    VALUES (?,?,?,?,?,?)
     ");
     try{
-        $prepare->execute([$firstnameVerify, $lastnameVerify, $usermail , $phone, $postcode, $message]);
+        $prepare->execute([$firstname,$lastname,$usermail,$phone,$postcode,$message]);
         return true;
     }catch(Exception $e){
         die($e->getMessage());
     }
+ 
 }
-
+ 
 
 function countMessages(PDO $db): int
 {

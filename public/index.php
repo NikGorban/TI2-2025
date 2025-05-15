@@ -36,48 +36,26 @@ require_once "../model/guestbookModel.php";
 /*
  * Si le formulaire a été soumis
  */
-if (isset($_POST["firstname"], $_POST["lastname"], $_POST["usermail"], $_POST["phone"], $_POST["postcode"], $_POST["message"])) {
-
-    $firstname = strip_tags($_POST['firstname']);
-    $firstname = htmlspecialchars($firstname, ENT_QUOTES);
-    $firstname = trim($firstname);
-
-    $lastname = strip_tags($_POST['lastname']);
-    $lastname = htmlspecialchars($lastname, ENT_QUOTES);
-    $lastname = trim($lastname);
-
-    $usermail = filter_var($_POST['usermail'], FILTER_VALIDATE_EMAIL);
+if(isset(
+    $_POST['firstname'],
+    $_POST['lastname'],
+    $_POST['usermail'],
+    $_POST['phone'],
+    $_POST['postcode'],
+    $_POST['message']
  
-    $phone = strip_tags($_POST['phone']);
-    $phone = htmlspecialchars($phone, ENT_QUOTES);
-    $phone = trim($phone);
-
-    $postcode = strip_tags($_POST['postcode']);
-    $postcode = htmlspecialchars($postcode, ENT_QUOTES);
-    $postcode = trim($postcode);
-
-    $message = strip_tags($_POST['message']);
-    $message = htmlspecialchars($message, ENT_QUOTES);
-    $message = trim($message);
-
-
-    //vérivication ultime avant d'appeler l'insertion
-    if (!empty($firstname) 
-    && !empty($lastname) 
-    && $usermail !== false 
-    && !empty($message) 
-    && !empty($phone) 
-    && !empty($postcode)) {
-        $insert = addGuestbook($db, 
-        $firstname, 
-        $lastname, 
-        $usermail, 
-        $phone,  
-        $postcode, 
-        $message);
-    } else {
-        $erreur = "Erreur dans le formulaire !";}
-}
+)) {
+ 
+  $insert = addGuestbook($db,
+       $_POST['firstname'],
+       $_POST['lastname'],
+       $_POST['usermail'],
+       $_POST['phone'],
+       $_POST['postcode'],
+       $_POST['message']  
+    );} //else {
+    //     $erreur = "Erreur dans le formulaire !";}
+// }
 
 $getmessage = getAllGuestbook($db);
 

@@ -1,5 +1,5 @@
 body{
-    background-color: rgb(211, 211, 211) ;
+    background-color: rgb(196, 194, 194) ;
     text-align: center;
 }
 
@@ -30,6 +30,9 @@ h1{
 
 .merci{
     color: green;
+}
+span{
+     height: 1vh;
 }
 
 

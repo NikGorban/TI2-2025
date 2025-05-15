@@ -11,11 +11,14 @@
     <title>TI2 | Livre d'or</title>
     <link rel="icon" type="image/png" href="img/favicon.png">
     <link rel="stylesheet" href="css/style.css">
+    
 </head>
 <body>
 <h1>TI2 | Livre d'or</h1>
 <!-- Formulaire d'ajout d'un message -->
 <div class="container">
+<div>
+<h3 id="messageJs"></h3>
 
 <?php
 $error = "";
@@ -28,50 +31,51 @@ if(isset($insert)){
     }
 }
 ?>
+
 <h3 class="merci"><?=$thanks?></h3>
 <h3 class="err"><?=$error?></h3>
-
+</div>
     <h2>Ici le formulaire</h2>
 
     <?php if (isset($erreur)):?>
         <h4 class="err"><?=$erreur?></h4>
     <?php endif; ?>
 
-    <img src="img/sign-up-amico.png" height="400px" alt="">
+    <img src="img/sign-up-amico.png" height="400px" alt="form">
     <div class="formulaire">
 
-        <form action="" method="post">
+        <form action="" method="post" id="formulaire">
             <div class="bloc">
                 <label for="firstname">Prenom *</label>
-                <input type="text" name="firstname" id="firstname" maxlength="100" required>
+                <input type="text" name="firstname" id="firstname" maxlength="100">
             </div>
-
+        <span id="prenomError" style="width: 100px; height: 10px;"></span>
             <div class="bloc">
                 <label for="lastname">Nom *</label>    
-                <input type="text" name="lastname" id="lastname" maxlength="100" required>
+                <input type="text" name="lastname" id="lastname" maxlength="100" >
             </div>
-
+            <span id="nomError"></span>
             <div class="bloc">
                  <label for="usermail">Email *</label>
-                <input type="email" name="usermail" id="usermail" maxlength="200" required>
+                <input type="email" name="usermail" id="usermail" maxlength="200" >
             </div>
-
+            <span id="emailError"></span>
             <div class="bloc">
                 <label for="postcode">c /postal *</label>
-                <input type="text" name="postcode" id="postcode" maxlength="4" required>  
+                <input type="text" name="postcode" id="postcode" maxlength="4" >  
             </div>
-
+            <span id="postalError"></span>
             <div class="bloc">
                 <label for="phone">Portable *</label>
-                <input type="tel" name="phone" id="phone" maxlength="20" required>
+                <input type="tel" name="phone" id="phone" maxlength="20" >
             </div>
-
+            <span id="portableError"></span>
             <div class="bloc">
                 <label for="message">Message *</label>
-                <textarea name="message" id="message" rows="8" maxlength="300" required style = "resize: none;"></textarea>
+                <textarea name="message" id="message" rows="8" maxlength="300"  style = "resize: none;"></textarea>
             </div> 
 
-            <button type="submit">Envoyer</button>
+            <button id="btn" type="submit">Envoyer</button>
         </form>
     </div>
 </div>
@@ -96,8 +100,7 @@ else:
 <?php
     foreach ($getmessage as $message):
 ?>
-    <div class="message">
-    
+    <div class="message">    
         
             <p><strong>
             <?=$message['firstname']." ".$message['lastname'] ?>
@@ -105,8 +108,7 @@ else:
             <p><em>
             <?=dateFR($message['datemessage'])?>
             </em></p>
-            <p><?=nl2br($message['message'])?></p>    
-        
+            <p><?=nl2br($message['message'])?></p>        
     
     </div>
     <?php
@@ -123,10 +125,10 @@ endif;
 // var_dump($_POST);
 // echo '<p>$_GET</p>';
 // var_dump($_GET);
-
+var_dump ($insert);
 ?>
-
 <script src="js/validation.js"></script>
+
 </body>
 </html>
 
